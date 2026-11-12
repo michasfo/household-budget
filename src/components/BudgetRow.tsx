@@ -1,7 +1,7 @@
 import { motion } from 'motion/react'
 import { BlurFade } from './ui/blur-fade'
 import type { Category } from '../data/budget'
-import { fmt, statusOf, statusLabel, PRORATE_FRAC } from '../data/budget'
+import { fmt, PRORATE_FRAC } from '../data/budget'
 
 const barColors = {
   good: 'bg-good',
@@ -10,17 +10,11 @@ const barColors = {
   accent: 'bg-clay',
 }
 
-const pillStyles = {
-  good: 'text-good bg-good-bg',
-  watch: 'text-watch bg-watch-bg',
-  bad: 'text-bad bg-bad-bg',
-}
-
-function barClass(pct: number): keyof typeof barColors {
-  if (pct > 100) return 'bad'
-  if (pct > 85) return 'watch'
-  if (pct > 60) return 'accent'
-  return 'good'
+function barClass(pct: number) {
+  if (pct > 100) return 'bad' as const
+  if (pct > 85) return 'watch' as const
+  if (pct > 60) return 'accent' as const
+  return 'good' as const
 }
 
 interface BudgetRowProps {
@@ -29,9 +23,10 @@ interface BudgetRowProps {
 }
 
 export function BudgetRow({ category, index }: BudgetRowProps) {
-  const prorated = Math.round(category.budget * PRORATE_FRAC)
-  const pct = prorated > 0 ? Math.round((category.actual / prorated) * 100) : 0
-  const s = statusOf(pct)
+  const annualBudget = category.budget
+  const projectedAnnual = Math.round(category.actual / PRORATE_FRAC)
+  const diff = annualBudget - projectedAnnual
+  const pct = annualBudget > 0 ? Math.round((projectedAnnual / annualBudget) * 100) : 0
   const fillW = Math.min(pct, 100)
 
   return (
@@ -39,11 +34,17 @@ export function BudgetRow({ category, index }: BudgetRowProps) {
       <div className="bg-card border border-card-border rounded-[14px] px-5 py-4 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
         <div className="flex justify-between items-baseline mb-1 gap-2 flex-wrap">
           <span className="text-base font-medium">{category.name}</span>
-          <span className="text-[13px] text-text-muted tabular-nums whitespace-nowrap">
-            <strong className="text-text font-semibold">{fmt(category.actual)}</strong>
-            {' / '}
-            {fmt(prorated)} prorated
-          </span>
+          <div className="flex gap-4 text-[13px] tabular-nums whitespace-nowrap">
+            <span className="text-text-muted">
+              Budget <strong className="text-text font-semibold">{fmt(annualBudget)}</strong>
+            </span>
+            <span className="text-text-muted">
+              Projected <strong className="text-text font-semibold">{fmt(projectedAnnual)}</strong>
+            </span>
+            <span className={diff >= 0 ? 'text-good font-semibold' : 'text-bad font-semibold'}>
+              {diff >= 0 ? `−${fmt(diff)} under` : `+${fmt(-diff)} over`}
+            </span>
+          </div>
         </div>
         <div className="h-2 bg-bar-track rounded-full mt-2 overflow-hidden">
           <motion.div
@@ -59,16 +60,11 @@ export function BudgetRow({ category, index }: BudgetRowProps) {
           />
         </div>
         <div className="flex justify-between items-center mt-2 gap-2">
-          <span className={`text-[13px] font-semibold tabular-nums text-${s}`}>
-            {pct}%
+          <span className={`text-[13px] font-semibold tabular-nums ${pct > 100 ? 'text-bad' : pct > 85 ? 'text-watch' : 'text-good'}`}>
+            {pct}% of annual budget
           </span>
           <span className="text-[12px] text-text-muted tabular-nums">
-            2027 target: {fmt(category.budget)}/yr
-          </span>
-          <span
-            className={`text-[12px] font-medium px-2.5 py-0.5 rounded-full ${pillStyles[s]}`}
-          >
-            {statusLabel(pct)}
+            YTD actual: {fmt(category.actual)}
           </span>
         </div>
       </div>

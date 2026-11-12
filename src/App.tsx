@@ -1,20 +1,26 @@
+import { useState } from 'react'
 import { BlurFade } from './components/ui/blur-fade'
 import { KpiCard } from './components/KpiCard'
 import { BudgetRow } from './components/BudgetRow'
 import { MonthlyChart } from './components/MonthlyChart'
+import { WeeklyTransactions } from './components/WeeklyTransactions'
 import { ThemeToggle } from './components/ThemeToggle'
 import {
   discretionary, fixed, allCategories,
   totalActual, totalBudget, proratedBudget,
   discActual, fixActual, PRORATE_FRAC, MONTHS_ELAPSED,
+  WEEK_LABEL,
 } from './data/budget'
 
+type Tab = 'budget' | 'weekly'
+
 function App() {
+  const [tab, setTab] = useState<Tab>('budget')
   const pctUsed = Math.round((totalActual / proratedBudget) * 100)
   const diff = proratedBudget - totalActual
   const overCount = allCategories.filter(c => {
-    const p = Math.round(c.budget * PRORATE_FRAC)
-    return p > 0 && c.actual > p
+    const projected = Math.round(c.actual / PRORATE_FRAC)
+    return c.budget > 0 && projected > c.budget
   }).length
 
   return (
@@ -24,7 +30,7 @@ function App() {
         <div className="flex justify-between items-start">
           <BlurFade delay={0}>
             <div className="text-[13px] text-text-muted uppercase tracking-[0.06em] mb-2">
-              Week of Nov 3 – Nov 9, 2026 · YTD through Nov 9
+              Week of {WEEK_LABEL} · YTD through Nov 9
             </div>
           </BlurFade>
           <ThemeToggle />
@@ -80,43 +86,73 @@ function App() {
         />
       </div>
 
-      {/* Discretionary */}
-      <BlurFade delay={0.15} inView>
-        <h2 className="font-title text-[22px] font-normal mt-10 mb-1">
-          Discretionary spending by category
-        </h2>
-        <p className="text-[13px] text-text-muted mb-5">
-          YTD actual vs 2027 annual budget, prorated to date
-        </p>
-      </BlurFade>
-      <div className="flex flex-col gap-2.5">
-        {discretionary.map((c, i) => (
-          <BudgetRow key={c.name} category={c} index={i} />
-        ))}
+      {/* Tabs */}
+      <div className="flex gap-1 bg-bg-soft rounded-full p-1 mb-8 w-fit">
+        <button
+          onClick={() => setTab('budget')}
+          className={`px-5 py-2 rounded-full text-[14px] font-medium transition-colors cursor-pointer border-0 ${
+            tab === 'budget'
+              ? 'bg-card text-text shadow-[0_1px_3px_rgba(0,0,0,0.08)]'
+              : 'bg-transparent text-text-muted hover:text-text'
+          }`}
+        >
+          Annual Budget
+        </button>
+        <button
+          onClick={() => setTab('weekly')}
+          className={`px-5 py-2 rounded-full text-[14px] font-medium transition-colors cursor-pointer border-0 ${
+            tab === 'weekly'
+              ? 'bg-card text-text shadow-[0_1px_3px_rgba(0,0,0,0.08)]'
+              : 'bg-transparent text-text-muted hover:text-text'
+          }`}
+        >
+          This Week
+        </button>
       </div>
 
-      {/* Fixed */}
-      <BlurFade delay={0.1} inView>
-        <h2 className="font-title text-[22px] font-normal mt-10 mb-1">
-          Fixed expenses by category
-        </h2>
-        <p className="text-[13px] text-text-muted mb-5">
-          YTD actual vs 2027 annual budget, prorated to date
-        </p>
-      </BlurFade>
-      <div className="flex flex-col gap-2.5">
-        {fixed.map((c, i) => (
-          <BudgetRow key={c.name} category={c} index={i} />
-        ))}
-      </div>
+      {tab === 'budget' ? (
+        <>
+          {/* Discretionary */}
+          <BlurFade delay={0.15} inView>
+            <h2 className="font-title text-[22px] font-normal mt-2 mb-1">
+              Discretionary spending by category
+            </h2>
+            <p className="text-[13px] text-text-muted mb-5">
+              Annual budget vs projected annual spend at current pace
+            </p>
+          </BlurFade>
+          <div className="flex flex-col gap-2.5">
+            {discretionary.map((c, i) => (
+              <BudgetRow key={c.name} category={c} index={i} />
+            ))}
+          </div>
 
-      {/* Monthly Chart */}
-      <BlurFade delay={0.1} inView>
-        <h2 className="font-title text-[22px] font-normal mt-10 mb-5">
-          Monthly spending trend — 2026
-        </h2>
-      </BlurFade>
-      <MonthlyChart />
+          {/* Fixed */}
+          <BlurFade delay={0.1} inView>
+            <h2 className="font-title text-[22px] font-normal mt-10 mb-1">
+              Fixed expenses by category
+            </h2>
+            <p className="text-[13px] text-text-muted mb-5">
+              Annual budget vs projected annual spend at current pace
+            </p>
+          </BlurFade>
+          <div className="flex flex-col gap-2.5">
+            {fixed.map((c, i) => (
+              <BudgetRow key={c.name} category={c} index={i} />
+            ))}
+          </div>
+
+          {/* Monthly Chart */}
+          <BlurFade delay={0.1} inView>
+            <h2 className="font-title text-[22px] font-normal mt-10 mb-5">
+              Monthly spending trend — 2026
+            </h2>
+          </BlurFade>
+          <MonthlyChart />
+        </>
+      ) : (
+        <WeeklyTransactions />
+      )}
 
       {/* Footer */}
       <BlurFade delay={0.15} inView>

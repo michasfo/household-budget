@@ -74,3 +74,30 @@ export function statusLabel(pct: number): string {
   if (pct > 85) return 'Watch'
   return 'On track'
 }
+
+export interface WeeklyTransaction {
+  category: string
+  amount: number
+  section: 'discretionary' | 'fixed'
+}
+
+// Weekly transactions for the week of Nov 3 – Nov 9, 2026 (Mon–Sun)
+// Source: Quicken CSV export 2026-11-11
+export const WEEK_LABEL = 'Nov 3 – Nov 9, 2026'
+export const weeklyTransactions: WeeklyTransaction[] = [
+  { category: 'Amazon',           amount: 287, section: 'discretionary' },
+  { category: 'Cash',             amount: 200, section: 'discretionary' },
+  { category: 'Clothing',         amount: 542, section: 'discretionary' },
+  { category: 'Dining',           amount: 389, section: 'discretionary' },
+  { category: 'Movies',           amount: 196, section: 'discretionary' },
+  { category: 'Personal Care',    amount: 85,  section: 'discretionary' },
+  { category: 'Subscriptions',    amount: 147, section: 'discretionary' },
+  { category: 'Taxi & Transport', amount: 96,  section: 'discretionary' },
+  { category: 'Vacation',         amount: 814, section: 'discretionary' },
+  { category: 'Groceries',        amount: 412, section: 'fixed' },
+  { category: 'Utilities',        amount: 138, section: 'fixed' },
+  { category: 'Health Care',      amount: 250, section: 'fixed' },
+]
+
+export const weeklyTotal = weeklyTransactions.reduce((s, t) => s + t.amount, 0)
+export const weeklyBudgetTarget = Math.round(totalBudget / 52)
