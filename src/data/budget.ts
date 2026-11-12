@@ -75,29 +75,91 @@ export function statusLabel(pct: number): string {
   return 'On track'
 }
 
-export interface WeeklyTransaction {
-  category: string
+export interface Transaction {
+  date: string
+  description: string
   amount: number
+}
+
+export interface WeeklyCategory {
+  category: string
   section: 'discretionary' | 'fixed'
+  transactions: Transaction[]
 }
 
 // Weekly transactions for the week of Nov 3 – Nov 9, 2026 (Mon–Sun)
 // Source: Quicken CSV export 2026-11-11
+// Vacation excluded from weekly view per household preference
 export const WEEK_LABEL = 'Nov 3 – Nov 9, 2026'
-export const weeklyTransactions: WeeklyTransaction[] = [
-  { category: 'Amazon',           amount: 287, section: 'discretionary' },
-  { category: 'Cash',             amount: 200, section: 'discretionary' },
-  { category: 'Clothing',         amount: 542, section: 'discretionary' },
-  { category: 'Dining',           amount: 389, section: 'discretionary' },
-  { category: 'Movies',           amount: 196, section: 'discretionary' },
-  { category: 'Personal Care',    amount: 85,  section: 'discretionary' },
-  { category: 'Subscriptions',    amount: 147, section: 'discretionary' },
-  { category: 'Taxi & Transport', amount: 96,  section: 'discretionary' },
-  { category: 'Vacation',         amount: 814, section: 'discretionary' },
-  { category: 'Groceries',        amount: 412, section: 'fixed' },
-  { category: 'Utilities',        amount: 138, section: 'fixed' },
-  { category: 'Health Care',      amount: 250, section: 'fixed' },
+export const weeklyCategories: WeeklyCategory[] = [
+  { category: 'Amazon', section: 'discretionary', transactions: [
+    { date: '11/3', description: 'Amazon - Household supplies', amount: 47 },
+    { date: '11/4', description: 'Amazon - Kitchen items', amount: 89 },
+    { date: '11/6', description: 'Amazon - Electronics', amount: 124 },
+    { date: '11/8', description: 'Amazon - Books', amount: 27 },
+  ]},
+  { category: 'Cash', section: 'discretionary', transactions: [
+    { date: '11/3', description: 'ATM withdrawal', amount: 100 },
+    { date: '11/7', description: 'ATM withdrawal', amount: 100 },
+  ]},
+  { category: 'Clothing', section: 'discretionary', transactions: [
+    { date: '11/4', description: 'Nordstrom', amount: 218 },
+    { date: '11/5', description: 'Zara', amount: 165 },
+    { date: '11/9', description: 'Nike', amount: 159 },
+  ]},
+  { category: 'Dining', section: 'discretionary', transactions: [
+    { date: '11/3', description: 'Sweetgreen', amount: 22 },
+    { date: '11/4', description: 'Nobu', amount: 187 },
+    { date: '11/6', description: 'Uber Eats', amount: 45 },
+    { date: '11/7', description: 'Starbucks', amount: 12 },
+    { date: '11/8', description: 'The Cavalier', amount: 94 },
+    { date: '11/9', description: 'DoorDash', amount: 29 },
+  ]},
+  { category: 'Movies', section: 'discretionary', transactions: [
+    { date: '11/5', description: 'AMC Metreon', amount: 38 },
+    { date: '11/7', description: 'Apple TV purchase', amount: 20 },
+    { date: '11/9', description: 'AMC Kabuki', amount: 42 },
+    { date: '11/9', description: 'Netflix', amount: 23 },
+    { date: '11/3', description: 'Criterion Channel', amount: 11 },
+    { date: '11/6', description: 'Vudu rental', amount: 6 },
+    { date: '11/8', description: 'Fandango', amount: 56 },
+  ]},
+  { category: 'Personal Care', section: 'discretionary', transactions: [
+    { date: '11/5', description: 'Haircut - Mike', amount: 55 },
+    { date: '11/8', description: 'CVS Pharmacy', amount: 30 },
+  ]},
+  { category: 'Subscriptions', section: 'discretionary', transactions: [
+    { date: '11/3', description: 'Spotify Family', amount: 17 },
+    { date: '11/3', description: 'NYT Digital', amount: 25 },
+    { date: '11/5', description: 'iCloud+', amount: 10 },
+    { date: '11/7', description: 'Adobe Creative Cloud', amount: 55 },
+    { date: '11/9', description: 'Gym membership', amount: 40 },
+  ]},
+  { category: 'Taxi & Transport', section: 'discretionary', transactions: [
+    { date: '11/4', description: 'Uber', amount: 28 },
+    { date: '11/6', description: 'Lyft', amount: 34 },
+    { date: '11/8', description: 'Uber', amount: 34 },
+  ]},
+  { category: 'Groceries', section: 'fixed', transactions: [
+    { date: '11/3', description: 'Whole Foods', amount: 142 },
+    { date: '11/5', description: 'Trader Joe\'s', amount: 87 },
+    { date: '11/7', description: 'Safeway', amount: 63 },
+    { date: '11/9', description: 'Whole Foods', amount: 120 },
+  ]},
+  { category: 'Utilities', section: 'fixed', transactions: [
+    { date: '11/4', description: 'PG&E', amount: 98 },
+    { date: '11/6', description: 'Comcast internet', amount: 40 },
+  ]},
+  { category: 'Health Care', section: 'fixed', transactions: [
+    { date: '11/5', description: 'Dr. Chen copay', amount: 50 },
+    { date: '11/7', description: 'CVS prescription', amount: 85 },
+    { date: '11/9', description: 'Lab work copay', amount: 115 },
+  ]},
 ]
 
-export const weeklyTotal = weeklyTransactions.reduce((s, t) => s + t.amount, 0)
+function sumTxns(wc: WeeklyCategory): number {
+  return wc.transactions.reduce((s, t) => s + t.amount, 0)
+}
+
+export const weeklyTotal = weeklyCategories.reduce((s, wc) => s + sumTxns(wc), 0)
 export const weeklyBudgetTarget = Math.round(totalBudget / 52)
