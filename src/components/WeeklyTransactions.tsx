@@ -1,12 +1,16 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { BlurFade } from './ui/blur-fade'
-import { weeklyCategories, weeklyTotal, weeklyBudgetTarget, discBudget, fixed, fmt, WEEK_LABEL } from '../data/budget'
+import { weeklyCategories, weeklyTotal, weeklyBudgetTarget, discBudget, discretionary, fixed, fmt, WEEK_LABEL } from '../data/budget'
 import type { WeeklyCategory } from '../data/budget'
+
+const allCats = [...discretionary, ...fixed]
 
 function CategoryRow({ wc, index }: { wc: WeeklyCategory; index: number }) {
   const [open, setOpen] = useState(false)
   const total = wc.transactions.reduce((s, t) => s + t.amount, 0)
+  const catBudget = allCats.find(c => c.name === wc.category)?.budget ?? 0
+  const monthly = Math.round(catBudget / 12)
 
   return (
     <BlurFade delay={0.05 + index * 0.03} inView direction="up" offset={6}>
@@ -15,17 +19,26 @@ function CategoryRow({ wc, index }: { wc: WeeklyCategory; index: number }) {
           onClick={() => setOpen(!open)}
           className="w-full px-4 py-3 flex justify-between items-center cursor-pointer bg-transparent border-0 text-text hover:bg-bar-track transition-colors"
         >
-          <span className="flex items-center gap-2 text-[15px]">
+          <span className="flex items-start gap-2 text-[15px]">
             <motion.span
               animate={{ rotate: open ? 90 : 0 }}
               transition={{ duration: 0.2 }}
-              className="text-text-muted text-[12px] inline-block"
+              className="text-text-muted text-[12px] inline-block mt-1"
             >
               ▶
             </motion.span>
-            {wc.category}
-            <span className="text-[12px] text-text-muted">
-              ({wc.transactions.length})
+            <span>
+              <span className="flex items-center gap-2">
+                {wc.category}
+                <span className="text-[12px] text-text-muted">
+                  ({wc.transactions.length})
+                </span>
+              </span>
+              {monthly > 0 && (
+                <span className="block text-[12px] text-text-muted tabular-nums">
+                  {fmt(monthly)}/mo budget
+                </span>
+              )}
             </span>
           </span>
           <span className="text-[15px] font-semibold tabular-nums">{fmt(total)}</span>
