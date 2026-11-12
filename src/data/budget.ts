@@ -170,15 +170,9 @@ export const weeklyCategories: WeeklyCategory[] = [
     { date: '11/08', description: 'Mollie Stone\'s', amount: 2.65 },
     { date: '11/08', description: 'Mollie Stone\'s', amount: 5.30 },
   ]},
-  { category: 'Condo Dues', section: 'fixed', transactions: [
-    { date: '11/03', description: 'ClickPay PropRtyPay', amount: 1105.32 },
-  ]},
-  { category: 'Mortgage', section: 'fixed', transactions: [
-    { date: '11/09', description: 'US Bank Home Mtg', amount: 1710.87 },
-  ]},
-  { category: 'Telephone', section: 'fixed', transactions: [
-    { date: '11/08', description: 'Apple', amount: 5.99 },
-  ]},
+  // Monthly bills excluded: Mortgage, Condo Dues, Telephone, Home Insurance,
+  // Property Tax, dental insurance (Blue Shield). These are fixed obligations
+  // with no weekly discretion.
 ]
 
 function sumTxns(wc: WeeklyCategory): number {
@@ -186,4 +180,10 @@ function sumTxns(wc: WeeklyCategory): number {
 }
 
 export const weeklyTotal = weeklyCategories.reduce((s, wc) => s + sumTxns(wc), 0)
-export const weeklyBudgetTarget = Math.round(totalBudget / 52)
+
+// Weekly target based only on categories shown in the weekly view
+// (discretionary + Groceries + Health Care — excludes monthly bills)
+const weeklyViewBudget = discBudget
+  + (fixed.find(c => c.name === 'Groceries')?.budget ?? 0)
+  + (fixed.find(c => c.name === 'Health Care')?.budget ?? 0)
+export const weeklyBudgetTarget = Math.round(weeklyViewBudget / 52)

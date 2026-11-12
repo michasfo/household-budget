@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { BlurFade } from './ui/blur-fade'
-import { weeklyCategories, weeklyTotal, weeklyBudgetTarget, discBudget, fixBudget, fmt, WEEK_LABEL } from '../data/budget'
+import { weeklyCategories, weeklyTotal, weeklyBudgetTarget, discBudget, fixed, fmt, WEEK_LABEL } from '../data/budget'
 import type { WeeklyCategory } from '../data/budget'
 
 function CategoryRow({ wc, index }: { wc: WeeklyCategory; index: number }) {
@@ -70,7 +70,9 @@ export function WeeklyTransactions() {
   const fixedTotal = fixedCats.reduce((s, wc) => s + wc.transactions.reduce((a, t) => a + t.amount, 0), 0)
   const overTarget = weeklyTotal > weeklyBudgetTarget
   const discWeeklyTarget = Math.round(discBudget / 52)
-  const fixWeeklyTarget = Math.round(fixBudget / 52)
+  const fixViewBudget = (fixed.find(c => c.name === 'Groceries')?.budget ?? 0)
+    + (fixed.find(c => c.name === 'Health Care')?.budget ?? 0)
+  const fixWeeklyTarget = Math.round(fixViewBudget / 52)
   const discOver = discTotal > discWeeklyTarget
   const fixOver = fixedTotal > fixWeeklyTarget
 
