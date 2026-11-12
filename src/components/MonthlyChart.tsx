@@ -38,8 +38,8 @@ export function MonthlyChart() {
                 color: 'var(--color-text)',
                 fontSize: 13,
               }}
-              formatter={(value: number) =>
-                '$' + value.toLocaleString()
+              formatter={(value) =>
+                '$' + Number(value).toLocaleString()
               }
               cursor={{ fill: 'var(--color-bar-track)', radius: 4 }}
             />
