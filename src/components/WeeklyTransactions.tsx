@@ -80,7 +80,7 @@ export function WeeklyTransactions() {
     <div>
       <BlurFade delay={0.05} inView>
         <div className="bg-card border border-card-border rounded-[14px] px-5 py-4 shadow-[0_1px_3px_rgba(0,0,0,0.04)] mb-6">
-          <div className="flex justify-between items-baseline flex-wrap gap-2">
+          <div className="flex justify-between items-baseline flex-wrap gap-2 mb-3">
             <div>
               <div className="text-[13px] text-text-muted uppercase tracking-[0.06em] mb-1">
                 Week total
@@ -97,6 +97,10 @@ export function WeeklyTransactions() {
                 {overTarget ? '+' : '−'}{fmt(Math.abs(weeklyTotal - weeklyBudgetTarget))}
               </div>
             </div>
+          </div>
+          <div className="border-t border-card-border pt-3 flex gap-6 text-[14px]">
+            <span>Discretionary: <strong className="font-semibold">{fmt(discTotal)}</strong></span>
+            <span>Fixed: <strong className="font-semibold">{fmt(fixedTotal)}</strong></span>
           </div>
         </div>
       </BlurFade>
