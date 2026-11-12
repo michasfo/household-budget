@@ -92,8 +92,8 @@ function App() {
           onClick={() => setTab('budget')}
           className={`px-5 py-2 rounded-full text-[14px] font-medium transition-colors cursor-pointer border-0 ${
             tab === 'budget'
-              ? 'bg-card text-text shadow-[0_1px_3px_rgba(0,0,0,0.08)]'
-              : 'bg-transparent text-text-muted hover:text-text'
+              ? 'bg-card text-tab-budget shadow-[0_1px_3px_rgba(0,0,0,0.08)]'
+              : 'bg-transparent text-text-muted hover:text-tab-budget'
           }`}
         >
           Annual Budget
@@ -102,8 +102,8 @@ function App() {
           onClick={() => setTab('weekly')}
           className={`px-5 py-2 rounded-full text-[14px] font-medium transition-colors cursor-pointer border-0 ${
             tab === 'weekly'
-              ? 'bg-card text-text shadow-[0_1px_3px_rgba(0,0,0,0.08)]'
-              : 'bg-transparent text-text-muted hover:text-text'
+              ? 'bg-card text-tab-weekly shadow-[0_1px_3px_rgba(0,0,0,0.08)]'
+              : 'bg-transparent text-text-muted hover:text-tab-weekly'
           }`}
         >
           This Week
