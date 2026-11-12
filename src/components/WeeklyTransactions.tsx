@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { BlurFade } from './ui/blur-fade'
-import { weeklyCategories, weeklyTotal, weeklyBudgetTarget, fmt, WEEK_LABEL } from '../data/budget'
+import { weeklyCategories, weeklyTotal, weeklyBudgetTarget, discBudget, fixBudget, fmt, WEEK_LABEL } from '../data/budget'
 import type { WeeklyCategory } from '../data/budget'
 
 function CategoryRow({ wc, index }: { wc: WeeklyCategory; index: number }) {
@@ -69,6 +69,10 @@ export function WeeklyTransactions() {
   const discTotal = discCats.reduce((s, wc) => s + wc.transactions.reduce((a, t) => a + t.amount, 0), 0)
   const fixedTotal = fixedCats.reduce((s, wc) => s + wc.transactions.reduce((a, t) => a + t.amount, 0), 0)
   const overTarget = weeklyTotal > weeklyBudgetTarget
+  const discWeeklyTarget = Math.round(discBudget / 52)
+  const fixWeeklyTarget = Math.round(fixBudget / 52)
+  const discOver = discTotal > discWeeklyTarget
+  const fixOver = fixedTotal > fixWeeklyTarget
 
   const sortByTotal = (a: WeeklyCategory, b: WeeklyCategory) => {
     const aTotal = a.transactions.reduce((s, t) => s + t.amount, 0)
@@ -80,28 +84,42 @@ export function WeeklyTransactions() {
     <div>
       <BlurFade delay={0.05} inView>
         <div className="bg-card border border-card-border rounded-[14px] px-5 py-4 shadow-[0_1px_3px_rgba(0,0,0,0.04)] mb-6">
-          <div className="flex justify-between items-baseline flex-wrap gap-2 mb-3">
-            <div>
-              <div className="text-[13px] text-text-muted uppercase tracking-[0.06em] mb-1">
-                Week total
-              </div>
-              <div className="text-[28px] font-title">{fmt(weeklyTotal)}</div>
-            </div>
-            <div className="text-right">
-              <div className="text-[13px] text-text-muted mb-1">Weekly target</div>
-              <div className="text-[20px] font-title text-text-muted">{fmt(weeklyBudgetTarget)}</div>
-            </div>
-            <div className="text-right">
-              <div className="text-[13px] text-text-muted mb-1">Difference</div>
-              <div className={`text-[20px] font-title ${overTarget ? 'text-bad' : 'text-good'}`}>
-                {overTarget ? '+' : '−'}{fmt(Math.abs(weeklyTotal - weeklyBudgetTarget))}
-              </div>
-            </div>
-          </div>
-          <div className="border-t border-card-border pt-3 flex gap-6 text-[14px]">
-            <span>Discretionary: <strong className="font-semibold">{fmt(discTotal)}</strong></span>
-            <span>Fixed: <strong className="font-semibold">{fmt(fixedTotal)}</strong></span>
-          </div>
+          <table className="w-full text-left">
+            <thead>
+              <tr className="text-[12px] text-text-muted uppercase tracking-[0.06em]">
+                <th className="font-normal pb-2"></th>
+                <th className="font-normal pb-2 text-right">Week Total</th>
+                <th className="font-normal pb-2 text-right">Weekly Target</th>
+                <th className="font-normal pb-2 text-right">Difference</th>
+              </tr>
+            </thead>
+            <tbody className="text-[16px] font-title">
+              <tr>
+                <td className="py-1.5 font-medium text-[14px] font-body">Discretionary</td>
+                <td className="py-1.5 text-right tabular-nums">{fmt(discTotal)}</td>
+                <td className="py-1.5 text-right tabular-nums text-text-muted">{fmt(discWeeklyTarget)}</td>
+                <td className={`py-1.5 text-right tabular-nums ${discOver ? 'text-bad' : 'text-good'}`}>
+                  {discOver ? '+' : '−'}{fmt(Math.abs(discTotal - discWeeklyTarget))}
+                </td>
+              </tr>
+              <tr>
+                <td className="py-1.5 font-medium text-[14px] font-body">Fixed</td>
+                <td className="py-1.5 text-right tabular-nums">{fmt(fixedTotal)}</td>
+                <td className="py-1.5 text-right tabular-nums text-text-muted">{fmt(fixWeeklyTarget)}</td>
+                <td className={`py-1.5 text-right tabular-nums ${fixOver ? 'text-bad' : 'text-good'}`}>
+                  {fixOver ? '+' : '−'}{fmt(Math.abs(fixedTotal - fixWeeklyTarget))}
+                </td>
+              </tr>
+              <tr className="border-t border-card-border text-[20px]">
+                <td className="pt-2 font-medium text-[14px] font-body">Total</td>
+                <td className="pt-2 text-right tabular-nums">{fmt(weeklyTotal)}</td>
+                <td className="pt-2 text-right tabular-nums text-text-muted">{fmt(weeklyBudgetTarget)}</td>
+                <td className={`pt-2 text-right tabular-nums ${overTarget ? 'text-bad' : 'text-good'}`}>
+                  {overTarget ? '+' : '−'}{fmt(Math.abs(weeklyTotal - weeklyBudgetTarget))}
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </BlurFade>
 

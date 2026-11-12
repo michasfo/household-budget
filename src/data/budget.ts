@@ -57,7 +57,9 @@ export const totalActual = allCategories.reduce((s, c) => s + c.actual, 0)
 export const totalBudget = allCategories.reduce((s, c) => s + c.budget, 0)
 export const proratedBudget = Math.round(totalBudget * PRORATE_FRAC)
 export const discActual = discretionary.reduce((s, c) => s + c.actual, 0)
+export const discBudget = discretionary.reduce((s, c) => s + c.budget, 0)
 export const fixActual = fixed.reduce((s, c) => s + c.actual, 0)
+export const fixBudget = fixed.reduce((s, c) => s + c.budget, 0)
 
 export function fmt(n: number): string {
   return '$' + Math.abs(n).toLocaleString('en-US', { maximumFractionDigits: 0 })
