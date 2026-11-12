@@ -93,7 +93,7 @@ function App() {
           className={`px-5 py-2 rounded-full text-[14px] font-medium transition-colors cursor-pointer border-0 ${
             tab === 'budget'
               ? 'bg-card text-tab-budget shadow-[0_1px_3px_rgba(0,0,0,0.08)]'
-              : 'bg-transparent text-text-muted hover:text-tab-budget'
+              : 'bg-transparent text-tab-budget'
           }`}
         >
           Annual Budget
@@ -103,7 +103,7 @@ function App() {
           className={`px-5 py-2 rounded-full text-[14px] font-medium transition-colors cursor-pointer border-0 ${
             tab === 'weekly'
               ? 'bg-card text-tab-weekly shadow-[0_1px_3px_rgba(0,0,0,0.08)]'
-              : 'bg-transparent text-text-muted hover:text-tab-weekly'
+              : 'bg-transparent text-tab-weekly'
           }`}
         >
           This Week
