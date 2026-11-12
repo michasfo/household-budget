@@ -52,7 +52,12 @@ export function BudgetRow({ category, index }: BudgetRowProps) {
     <BlurFade delay={0.05 + index * 0.04} inView direction="up" offset={8}>
       <div className="bg-card border border-card-border rounded-[14px] px-5 py-4 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
         <div className="flex justify-between items-baseline mb-3">
-          <span className="text-base font-medium">{category.name}</span>
+          <div>
+            <span className="text-base font-medium">{category.name}</span>
+            <span className="block text-[12px] text-text-muted tabular-nums mt-0.5">
+              {fmt(Math.round(annualBudget / 12))}/mo
+            </span>
+          </div>
           <span className={`text-[13px] font-semibold tabular-nums ${diff >= 0 ? 'text-good' : 'text-bad'}`}>
             {diff >= 0 ? `${fmt(diff)} under budget` : `${fmt(-diff)} over budget`}
           </span>
