@@ -99,6 +99,7 @@ export const weeklyCategories: WeeklyCategory[] = [
     { date: '11/05', description: 'Amazon.com', amount: 7.60 },
     { date: '11/08', description: 'Amazon.com', amount: 103.08 },
   ]},
+  { category: 'Cash', section: 'discretionary', transactions: [] },
   { category: 'Clothing', section: 'discretionary', transactions: [
     { date: '11/04', description: 'Sp Mio Inc', amount: 967.85 },
     { date: '11/08', description: 'Sp Mio Inc', amount: 513.26 },
