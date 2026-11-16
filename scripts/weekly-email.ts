@@ -6,7 +6,8 @@ import {
 } from '../src/data/budget.ts'
 import type { WeeklyCategory } from '../src/data/budget.ts'
 
-const RED = '#b5292c', GREEN = '#1a7a2e', AMBER = '#8a5a06'
+const APP_URL = 'https://michasfo.github.io/household-budget/'
+const RED ='#b5292c', GREEN = '#1a7a2e', AMBER = '#8a5a06'
 const allCats = [...discretionary, ...fixed]
 const sum = (wc: WeeklyCategory) => wc.transactions.reduce((s, t) => s + t.amount, 0)
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/'/g, '&#39;')
@@ -67,5 +68,6 @@ ${disc.map(categoryBlock).join('')}
 <h2 style="font-size:17px;font-weight:600;margin-bottom:12px">Fixed (Variable) – ${fmt(fixTotal)}</h2>
 ${fix.map(categoryBlock).join('')}
 <hr style="border:none;border-top:1px solid #ddd;margin:20px 0">
-<p style="font-size:12px;color:#aaa">Source: Quicken CSV export · View the full dashboard at <a href="https://michasfo.github.io/household-budget/" style="color:#7c3aed">michasfo.github.io/household-budget</a></p>
+<p style="margin:20px 0 12px"><a href="${APP_URL}" style="display:inline-block;background:#7c3aed;color:#ffffff;text-decoration:none;font-size:15px;font-weight:600;padding:10px 20px;border-radius:8px">Open Spending App →</a></p>
+<p style="font-size:12px;color:#aaa">Source: Quicken CSV export · <a href="${APP_URL}" style="color:#7c3aed">michasfo.github.io/household-budget</a></p>
 `)
