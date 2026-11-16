@@ -176,6 +176,28 @@ export const weeklyCategories: WeeklyCategory[] = [
   // with no weekly discretion.
 ]
 
+// Spending earlier in the same calendar month, BEFORE this week starts
+// (here: Sat Nov 1 – Sun Nov 2). Added to the week's total to show the
+// cumulative % of each category's monthly budget already spent.
+// Same exclusions as the weekly view (Vacation, monthly bills, dental insurance).
+// Update each week: sum of all prior weeks in the month; reset to {} when a
+// new month starts on the week's Monday.
+// Source: Quicken CSV export 2026-11-11
+export const MONTH_LABEL = 'November'
+export const monthPriorSpend: Record<string, number> = {
+  'Amazon': 139.37,
+  'Cash': 410.00,
+  'Dining': 112.68,
+  'Movies': 144.60,
+  'Personal Care': 99.95,
+  'Taxi & Transport': 92.74,
+  'Groceries': 24.86,
+}
+
+export function monthToDate(wc: WeeklyCategory): number {
+  return (monthPriorSpend[wc.category] ?? 0) + sumTxns(wc)
+}
+
 function sumTxns(wc: WeeklyCategory): number {
   return wc.transactions.reduce((s, t) => s + t.amount, 0)
 }

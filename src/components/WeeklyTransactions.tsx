@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { BlurFade } from './ui/blur-fade'
-import { weeklyCategories, weeklyTotal, weeklyBudgetTarget, discBudget, discretionary, fixed, fmt, WEEK_LABEL } from '../data/budget'
+import { weeklyCategories, weeklyTotal, weeklyBudgetTarget, discBudget, discretionary, fixed, fmt, WEEK_LABEL, MONTH_LABEL, monthToDate } from '../data/budget'
 import type { WeeklyCategory } from '../data/budget'
 
 const allCats = [...discretionary, ...fixed]
@@ -11,6 +11,7 @@ function CategoryRow({ wc, index }: { wc: WeeklyCategory; index: number }) {
   const total = wc.transactions.reduce((s, t) => s + t.amount, 0)
   const catBudget = allCats.find(c => c.name === wc.category)?.budget ?? 0
   const monthly = Math.round(catBudget / 12)
+  const mtdPct = monthly > 0 ? Math.round((monthToDate(wc) / monthly) * 100) : 0
 
   return (
     <BlurFade delay={0.05 + index * 0.03} inView direction="up" offset={6}>
@@ -37,6 +38,9 @@ function CategoryRow({ wc, index }: { wc: WeeklyCategory; index: number }) {
               {monthly > 0 && (
                 <span className="block text-[12px] text-text-muted tabular-nums">
                   {fmt(monthly)}/mo budget
+                  <span className={`ml-2 font-medium ${mtdPct > 100 ? 'text-bad' : mtdPct > 85 ? 'text-watch' : 'text-good'}`}>
+                    {mtdPct}% spent in {MONTH_LABEL}
+                  </span>
                 </span>
               )}
             </span>
