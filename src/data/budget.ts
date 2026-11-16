@@ -182,6 +182,19 @@ export const weeklyCategories: WeeklyCategory[] = [
 // new month starts on the week's Monday.
 // Source: Quicken CSV export 2026-11-16
 export const MONTH_LABEL = 'November'
+// Last day covered by this week's report; drives the month "pace" marker
+export const PERIOD_END = { year: 2026, month: 11, day: 16 }
+const daysInMonth = new Date(PERIOD_END.year, PERIOD_END.month, 0).getDate()
+// % of the month elapsed by the end of this week (e.g. Nov 16 → 53%)
+export const MONTH_PACE_PCT = Math.round((PERIOD_END.day / daysInMonth) * 100)
+
+// Colour for month-to-date % vs. pace: red = over the full month's budget,
+// amber = more than 10 points ahead of where we should be by now, green = on/behind pace
+export function paceStatus(pct: number): 'good' | 'watch' | 'bad' {
+  if (pct > 100) return 'bad'
+  if (pct > MONTH_PACE_PCT + 10) return 'watch'
+  return 'good'
+}
 export const monthPriorSpend: Record<string, number> = {
   'Amazon': 258.67,
   'Cash': 410.00,

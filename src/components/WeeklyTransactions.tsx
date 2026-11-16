@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { BlurFade } from './ui/blur-fade'
-import { weeklyCategories, weeklyTotal, weeklyBudgetTarget, discBudget, discretionary, fixed, fmt, WEEK_LABEL, MONTH_LABEL, monthToDate } from '../data/budget'
+import { weeklyCategories, weeklyTotal, weeklyBudgetTarget, discBudget, discretionary, fixed, fmt, WEEK_LABEL, MONTH_LABEL, monthToDate, MONTH_PACE_PCT, paceStatus } from '../data/budget'
 import type { WeeklyCategory } from '../data/budget'
 
 const allCats = [...discretionary, ...fixed]
@@ -38,9 +38,10 @@ function CategoryRow({ wc, index }: { wc: WeeklyCategory; index: number }) {
               {monthly > 0 && (
                 <span className="block text-[12px] text-text-muted tabular-nums">
                   {fmt(monthly)}/mo budget
-                  <span className={`ml-2 font-medium ${mtdPct > 100 ? 'text-bad' : mtdPct > 85 ? 'text-watch' : 'text-good'}`}>
+                  <span className={`ml-2 font-medium ${({ bad: 'text-bad', watch: 'text-watch', good: 'text-good' } as const)[paceStatus(mtdPct)]}`}>
                     {mtdPct}% spent in {MONTH_LABEL}
                   </span>
+                  <span className="ml-1">· {MONTH_PACE_PCT}% of month gone</span>
                 </span>
               )}
             </span>
@@ -166,7 +167,7 @@ export function WeeklyTransactions() {
 
       <BlurFade delay={0.15} inView>
         <p className="text-[12px] text-text-muted mt-6 italic">
-          {WEEK_LABEL} · Monday 12:00 AM – Sunday 11:59 PM · Vacation excluded
+          {WEEK_LABEL} · Monday 12:00 AM – Sunday 11:59 PM · Vacation excluded · Red = over the full month's budget, amber = ahead of pace
         </p>
       </BlurFade>
     </div>

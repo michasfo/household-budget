@@ -3,7 +3,7 @@
 // Recipients (from Nov 16, 2026): fedormf@gmail.com, nettaffedor@gmail.com
 import {
   weeklyCategories, weeklyTotal, weeklyBudgetTarget, discBudget, discretionary, fixed,
-  fmt, WEEK_LABEL, MONTH_LABEL, monthToDate,
+  fmt, WEEK_LABEL, MONTH_LABEL, monthToDate, MONTH_PACE_PCT, paceStatus,
 } from '../src/data/budget.ts'
 import type { WeeklyCategory } from '../src/data/budget.ts'
 
@@ -17,14 +17,14 @@ const money2 = (n: number) => (n < 0 ? '−' : '') + '$' + Math.abs(n).toLocaleS
 function categoryBlock(wc: WeeklyCategory): string {
   const monthly = Math.round((allCats.find(c => c.name === wc.category)?.budget ?? 0) / 12)
   const pct = monthly > 0 ? Math.round((monthToDate(wc) / monthly) * 100) : 0
-  const color = pct > 100 ? RED : pct > 85 ? AMBER : GREEN
+  const color = { bad: RED, watch: AMBER, good: GREEN }[paceStatus(pct)]
   const rows = wc.transactions.map((t, i) => {
     const last = i === wc.transactions.length - 1
     return `<tr${last ? '' : ' style="border-bottom:1px solid #f0f0f0"'}><td style="padding:4px 0;color:#888${i === 0 ? ';width:50px' : ''}">${t.date}</td><td style="padding:4px 0">${esc(t.description)}</td><td style="text-align:right;padding:4px 0">${money2(t.amount)}</td></tr>`
   }).join('\n')
   return `
 <h3 style="font-size:14px;font-weight:600;margin:16px 0 2px;color:#555">${esc(wc.category)} — ${fmt(sum(wc))}</h3>
-<p style="font-size:12px;color:#999;margin:0 0 6px">${fmt(monthly)}/mo budget · <span style="color:${color};font-weight:600">${pct}% spent in ${MONTH_LABEL}</span></p>
+<p style="font-size:12px;color:#999;margin:0 0 6px">${fmt(monthly)}/mo budget · <span style="color:${color};font-weight:600">${pct}% spent in ${MONTH_LABEL}</span> · ${MONTH_PACE_PCT}% of month gone</p>
 <table style="width:100%;border-collapse:collapse;font-size:13px">
 ${rows}
 </table>
@@ -61,7 +61,7 @@ console.log(`
 <tr style="border-bottom:1px solid #eee"><td style="padding:8px 0;font-weight:500">Fixed (Groceries + Health Care)</td><td style="text-align:right;padding:8px 0">${fmt(fixTotal)}</td><td style="text-align:right;padding:8px 0;color:#888">${fmt(fixTarget)}</td>${diffCell(fixTotal, fixTarget)}</tr>
 <tr style="border-top:2px solid #ddd"><td style="padding:8px 0;font-weight:700">Total</td><td style="text-align:right;padding:8px 0;font-weight:700">${fmt(weeklyTotal)}</td><td style="text-align:right;padding:8px 0;color:#888;font-weight:700">${fmt(weeklyBudgetTarget)}</td>${diffCell(weeklyTotal, weeklyBudgetTarget, true)}</tr>
 </tbody></table>
-<p style="font-size:13px;color:#888;margin-top:4px">Excludes monthly bills (Mortgage, Condo Dues, Telephone, Insurance, Property Tax). "% spent" is ${MONTH_LABEL} to date vs. the monthly budget.</p>
+<p style="font-size:13px;color:#888;margin-top:4px">Excludes monthly bills (Mortgage, Condo Dues, Telephone, Insurance, Property Tax). "% spent" is ${MONTH_LABEL} to date vs. the full monthly budget; ${MONTH_PACE_PCT}% of the month has gone by. <span style="color:${RED}">Red</span> = already over the month's budget, <span style="color:${AMBER}">amber</span> = ahead of pace.</p>
 <hr style="border:none;border-top:1px solid #ddd;margin:20px 0">
 <h2 style="font-size:17px;font-weight:600;margin-bottom:12px">Discretionary – ${fmt(discTotal)}</h2>
 ${disc.map(categoryBlock).join('')}
