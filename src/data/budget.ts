@@ -96,7 +96,7 @@ export interface WeeklyCategory {
 // since the 11/16 export omits the Doctor subcategory)
 // Vacation excluded from weekly view per household preference
 export const WEEK_LABEL = 'Nov 10 – Nov 16, 2026'
-export const weeklyCategories: WeeklyCategory[] = [
+const weeklyData: WeeklyCategory[] = [
   { category: 'Amazon', section: 'discretionary', transactions: [
     { date: '11/10', description: 'Amazon.com', amount: 16.28 },
     { date: '11/13', description: 'Amazon.com', amount: 33.22 },
@@ -212,6 +212,16 @@ export const monthPriorSpend: Record<string, number> = {
 export function monthToDate(wc: WeeklyCategory): number {
   return (monthPriorSpend[wc.category] ?? 0) + sumTxns(wc)
 }
+
+// Every category in the weekly view appears, even with $0 this week, so the
+// month-to-date % still shows: all discretionary except Vacation, plus Groceries
+// and Health Care (other fixed items are monthly bills).
+const WEEKLY_VIEW_FIXED = ['Groceries', 'Health Care']
+export const weeklyCategories: WeeklyCategory[] = [
+  ...discretionary.filter(c => c.name !== 'Vacation').map(c => ({ name: c.name, section: 'discretionary' as const })),
+  ...WEEKLY_VIEW_FIXED.map(name => ({ name, section: 'fixed' as const })),
+].map(({ name, section }) =>
+  weeklyData.find(w => w.category === name) ?? { category: name, section, transactions: [] })
 
 function sumTxns(wc: WeeklyCategory): number {
   return wc.transactions.reduce((s, t) => s + t.amount, 0)

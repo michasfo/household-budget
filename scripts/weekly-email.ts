@@ -1,6 +1,7 @@
 // Builds the Weekly Spending Report email HTML from src/data/budget.ts.
 // Run: node scripts/weekly-email.ts > weekly-email.html   (Node 22.6+)
 // Recipients (from Nov 16, 2026): fedormf@gmail.com, nettaffedor@gmail.com
+// Delivery: save as a Gmail DRAFT and notify Michael; he reviews and sends himself (from Nov 16, 2026).
 import {
   weeklyCategories, weeklyTotal, weeklyBudgetTarget, discBudget, discretionary, fixed,
   fmt, WEEK_LABEL, MONTH_LABEL, monthToDate, MONTH_PACE_PCT, paceStatus,
@@ -22,18 +23,19 @@ function categoryBlock(wc: WeeklyCategory): string {
     const last = i === wc.transactions.length - 1
     return `<tr${last ? '' : ' style="border-bottom:1px solid #f0f0f0"'}><td style="padding:4px 0;color:#888${i === 0 ? ';width:50px' : ''}">${t.date}</td><td style="padding:4px 0">${esc(t.description)}</td><td style="text-align:right;padding:4px 0">${money2(t.amount)}</td></tr>`
   }).join('\n')
+  const table = wc.transactions.length ? `<table style="width:100%;border-collapse:collapse;font-size:13px">
+${rows}
+</table>` : `<p style="font-size:12px;color:#bbb;margin:0;font-style:italic">No spending this week</p>`
   return `
 <h3 style="font-size:14px;font-weight:600;margin:16px 0 2px;color:#555">${esc(wc.category)} — ${fmt(sum(wc))}</h3>
 <p style="font-size:12px;color:#999;margin:0 0 6px">${fmt(monthly)}/mo budget · <span style="color:${color};font-weight:600">${pct}% spent in ${MONTH_LABEL}</span> · ${MONTH_PACE_PCT}% of month gone</p>
-<table style="width:100%;border-collapse:collapse;font-size:13px">
-${rows}
-</table>
+${table}
 `
 }
 
-const byTotal = (a: WeeklyCategory, b: WeeklyCategory) => sum(b) - sum(a)
-const disc = weeklyCategories.filter(w => w.section === 'discretionary' && w.transactions.length).sort(byTotal)
-const fix = weeklyCategories.filter(w => w.section === 'fixed' && w.transactions.length).sort(byTotal)
+const byTotal = (a: WeeklyCategory, b: WeeklyCategory) => sum(b) - sum(a) || monthToDate(b) - monthToDate(a)
+const disc = weeklyCategories.filter(w => w.section === 'discretionary').sort(byTotal)
+const fix = weeklyCategories.filter(w => w.section === 'fixed').sort(byTotal)
 const discTotal = disc.reduce((s, w) => s + sum(w), 0)
 const fixTotal = fix.reduce((s, w) => s + sum(w), 0)
 const discTarget = Math.round(discBudget / 52)
