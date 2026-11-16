@@ -68,7 +68,7 @@ function CategoryRow({ wc, index }: { wc: WeeklyCategory; index: number }) {
                       <span className="text-text-muted tabular-nums w-[40px] shrink-0">{t.date}</span>
                       <span>{t.description}</span>
                     </span>
-                    <span className="tabular-nums font-medium">{fmt(t.amount)}</span>
+                    <span className={`tabular-nums font-medium ${t.amount < 0 ? 'text-good' : ''}`}>{t.amount < 0 ? `−${fmt(t.amount)} refund` : fmt(t.amount)}</span>
                   </div>
                 ))}
               </div>

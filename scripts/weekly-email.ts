@@ -1,5 +1,6 @@
 // Builds the Weekly Spending Report email HTML from src/data/budget.ts.
 // Run: node scripts/weekly-email.ts > weekly-email.html   (Node 22.6+)
+// Recipients (from Nov 16, 2026): fedormf@gmail.com, nettaffedor@gmail.com
 import {
   weeklyCategories, weeklyTotal, weeklyBudgetTarget, discBudget, discretionary, fixed,
   fmt, WEEK_LABEL, MONTH_LABEL, monthToDate,
@@ -11,7 +12,7 @@ const RED ='#b5292c', GREEN = '#1a7a2e', AMBER = '#8a5a06'
 const allCats = [...discretionary, ...fixed]
 const sum = (wc: WeeklyCategory) => wc.transactions.reduce((s, t) => s + t.amount, 0)
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/'/g, '&#39;')
-const money2 = (n: number) => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+const money2 = (n: number) => (n < 0 ? '−' : '') + '$' + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + (n < 0 ? ' refund' : '')
 
 function categoryBlock(wc: WeeklyCategory): string {
   const monthly = Math.round((allCats.find(c => c.name === wc.category)?.budget ?? 0) / 12)

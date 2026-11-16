@@ -8,29 +8,31 @@ export const MONTHS_ELAPSED = 10
 export const PRORATE_FRAC = MONTHS_ELAPSED / 12
 
 // 2027 Budget Targets from "2027 Budget Target - 185K 3.numbers"
-// Actuals from Quicken CSV export 2026-11-11, transactions through Mon 11/9
+// Actuals: Quicken CSV export 2026-11-16, transactions through Sun 11/16.
+// Auto, Health Care, Utilities, Home Insurance, Property Tax, Other Fixed = 11/9 values
+// plus this week's spend (the 11/16 export omits some of their subcategories).
 export const discretionary: Category[] = [
-  { name: 'Amazon',           actual: 11732, budget: 9021 },
-  { name: 'Auto',             actual: 2581,  budget: 1992 },
-  { name: 'Cash',             actual: 10705, budget: 8030 },
-  { name: 'Charity',          actual: 2306,  budget: 1823 },
-  { name: 'Clothing',         actual: 28773, budget: 25185 },
+  { name: 'Amazon',           actual: 11782, budget: 9021 },
+  { name: 'Auto',             actual: 2586,  budget: 1992 },
+  { name: 'Cash',             actual: 10745, budget: 8030 },
+  { name: 'Charity',          actual: 2326,  budget: 1823 },
+  { name: 'Clothing',         actual: 28886, budget: 25185 },
   { name: 'Computer',         actual: 126,   budget: 100 },
-  { name: 'Dining',           actual: 16803, budget: 12735 },
-  { name: 'Gifts Given',      actual: 2886,  budget: 2282 },
+  { name: 'Dining',           actual: 17079, budget: 12735 },
+  { name: 'Gifts Given',      actual: 3144,  budget: 2282 },
   { name: 'Household',        actual: 1463,  budget: 1007 },
   { name: 'Misc',             actual: 189,   budget: 505 },
-  { name: 'Movies',           actual: 8696,  budget: 6292 },
-  { name: 'Personal Care',    actual: 4537,  budget: 3661 },
-  { name: 'Subscriptions',    actual: 9767,  budget: 6819 },
-  { name: 'Taxi & Transport', actual: 4215,  budget: 3089 },
-  { name: 'Vacation',         actual: 33972, budget: 24524 },
+  { name: 'Movies',           actual: 8830,  budget: 6292 },
+  { name: 'Personal Care',    actual: 4587,  budget: 3661 },
+  { name: 'Subscriptions',    actual: 9847,  budget: 6819 },
+  { name: 'Taxi & Transport', actual: 4367,  budget: 3089 },
+  { name: 'Vacation',         actual: 34905, budget: 24524 },
 ]
 
 export const fixed: Category[] = [
   { name: 'Condo Dues',    actual: 12159, budget: 14891 },
-  { name: 'Groceries',     actual: 10298, budget: 11774 },
-  { name: 'Health Care',   actual: 6794,  budget: 8497 },
+  { name: 'Groceries',     actual: 10523, budget: 11774 },
+  { name: 'Health Care',   actual: 7044,  budget: 8497 },
   { name: 'Home Insurance', actual: 4439, budget: 4439 },
   { name: 'Mortgage',      actual: 18820, budget: 20532 },
   { name: 'Property Tax',  actual: 5016,  budget: 10320 },
@@ -49,7 +51,7 @@ export const monthlyData = [
   { month: 'Aug', actual: 16836, budget: 15417 },
   { month: 'Sep', actual: 16551, budget: 15417 },
   { month: 'Oct', actual: 17726, budget: 15417 },
-  { month: 'Nov', actual: 6846,  budget: 15417 },
+  { month: 'Nov', actual: 8371,  budget: 15417 },
 ]
 
 export const allCategories = [...discretionary, ...fixed]
@@ -89,87 +91,83 @@ export interface WeeklyCategory {
   transactions: Transaction[]
 }
 
-// Weekly transactions for the week of Nov 3 – Nov 9, 2026 (Mon–Sun)
-// Source: Quicken CSV export 2026-11-11
+// Weekly transactions for the week of Nov 10 – Nov 16, 2026 (Mon–Sun)
+// Source: Quicken CSV export 2026-11-16 (+ Dermatology 11/10 from the 11/11 export,
+// since the 11/16 export omits the Doctor subcategory)
 // Vacation excluded from weekly view per household preference
-export const WEEK_LABEL = 'Nov 3 – Nov 9, 2026'
+export const WEEK_LABEL = 'Nov 10 – Nov 16, 2026'
 export const weeklyCategories: WeeklyCategory[] = [
   { category: 'Amazon', section: 'discretionary', transactions: [
-    { date: '11/03', description: 'Amazon.com', amount: 8.62 },
-    { date: '11/05', description: 'Amazon.com', amount: 7.60 },
-    { date: '11/08', description: 'Amazon.com', amount: 103.08 },
+    { date: '11/10', description: 'Amazon.com', amount: 16.28 },
+    { date: '11/13', description: 'Amazon.com', amount: 33.22 },
   ]},
-  { category: 'Cash', section: 'discretionary', transactions: [] },
-  { category: 'Clothing', section: 'discretionary', transactions: [
-    { date: '11/04', description: 'Sp Mio Inc', amount: 967.85 },
-    { date: '11/08', description: 'Sp Mio Inc', amount: 513.26 },
+  { category: 'Auto', section: 'discretionary', transactions: [
+    { date: '11/15', description: 'Presidio Trust Parking', amount: 5.00 },
+  ]},
+  { category: 'Cash', section: 'discretionary', transactions: [
+    { date: '11/10', description: 'ATM Withdrawal', amount: 20.00 },
+    { date: '11/13', description: 'ATM Withdrawal', amount: 20.00 },
   ]},
   { category: 'Dining', section: 'discretionary', transactions: [
-    { date: '11/03', description: 'A & M Liquor', amount: 6.70 },
-    { date: '11/03', description: 'UN Market', amount: 2.06 },
-    { date: '11/06', description: 'Opera Plaza Ecommerce', amount: 9.37 },
-    { date: '11/06', description: 'Presidio Liquors & Groce', amount: 2.55 },
-    { date: '11/06', description: 'Presidio Liquors & Groce', amount: 3.07 },
-    { date: '11/06', description: 'Brasserie', amount: 6.20 },
-    { date: '11/08', description: 'Roam Artisan Burgers', amount: 21.62 },
-    { date: '11/08', description: 'Presidio Liquors & Groce', amount: 2.55 },
-    { date: '11/08', description: 'Pork Store Cafe', amount: 22.68 },
-    { date: '11/08', description: 'Presidio Liquors & Groce', amount: 2.55 },
-    { date: '11/08', description: 'Barista Cafe', amount: 7.75 },
-    { date: '11/08', description: 'Presidio Liquors & Groce', amount: 2.55 },
-    { date: '11/08', description: 'Roam Artisan Burgers', amount: 9.06 },
-    { date: '11/08', description: 'Presidio Liquors & Groce', amount: 5.89 },
-    { date: '11/08', description: 'Presidio Liquors & Groce', amount: 2.55 },
-    { date: '11/08', description: 'Barista Cafe', amount: 16.88 },
-    { date: '11/08', description: 'Presidio Liquors & Groce', amount: 2.55 },
-    { date: '11/08', description: 'Presidio Liquors & Groce', amount: 2.55 },
-    { date: '11/08', description: 'Presidio Liquors & Groce', amount: 2.55 },
-    { date: '11/08', description: 'Pork Store Cafe', amount: 24.33 },
-    { date: '11/08', description: 'Presidio Liquors & Groce', amount: 2.49 },
-    { date: '11/09', description: 'Barista Cafe', amount: 14.27 },
-    { date: '11/09', description: 'Presidio Liquors & Groce', amount: 5.89 },
-    { date: '11/09', description: 'Presidio Liquors & Groce', amount: 2.55 },
-    { date: '11/09', description: 'Presidio Kebab', amount: 29.47 },
-    { date: '11/09', description: 'Presidio Liquors & Groce', amount: 2.55 },
-    { date: '11/09', description: 'Presidio Liquors & Groce', amount: 2.55 },
-    { date: '11/09', description: 'Barista Cafe', amount: 7.75 },
-    { date: '11/09', description: 'Presidio Liquors & Groce', amount: 2.55 },
-    { date: '11/09', description: 'Presidio Liquors & Groce', amount: 2.55 },
+    { date: '11/10', description: 'A & M Liquor', amount: 6.70 },
+    { date: '11/10', description: 'County Market', amount: 3.50 },
+    { date: '11/10', description: 'Jane On Fillmore', amount: 20.37 },
+    { date: '11/11', description: 'Smitten Ice Cream', amount: 12.71 },
+    { date: '11/11', description: 'UN Market', amount: 4.12 },
+    { date: '11/11', description: 'UN Market', amount: 4.94 },
+    { date: '11/12', description: 'Bean Bags', amount: 32.89 },
+    { date: '11/12', description: "Mel's Kitchen", amount: 37.56 },
+    { date: '11/12', description: "Mel's Kitchen", amount: 48.24 },
+    { date: '11/13', description: 'Bean Bags', amount: 32.89 },
+    { date: '11/15', description: 'A & M Liquor', amount: 3.35 },
+    { date: '11/15', description: 'Fresca Garden', amount: 31.93 },
+    { date: '11/15', description: 'Friends Liquor 2', amount: 8.23 },
+    { date: '11/15', description: 'Mayflower Market', amount: 5.28 },
+    { date: '11/15', description: 'Presidio Liquors & Groce', amount: 2.55 },
+    { date: '11/15', description: 'The Mess Hall', amount: 12.87 },
+    { date: '11/15', description: 'United Liquor And Deli', amount: 2.22 },
+    { date: '11/15', description: 'United Liquor And Deli', amount: 6.21 },
   ]},
-  { category: 'Household', section: 'discretionary', transactions: [
-    { date: '11/05', description: 'Ebay', amount: 136.26 },
-    { date: '11/06', description: 'HP Instant Ink', amount: 9.22 },
-  ]},
-  { category: 'Movies', section: 'discretionary', transactions: [
-    { date: '11/03', description: 'The Roxie Theater', amount: 15.00 },
-    { date: '11/04', description: 'Netflix', amount: 19.99 },
-    { date: '11/04', description: 'Kabuki', amount: 20.00 },
-    { date: '11/06', description: 'Alamo Drafthouse Cinema', amount: 11.19 },
-    { date: '11/08', description: 'Vogue', amount: 14.50 },
-    { date: '11/08', description: 'Vogue', amount: 7.00 },
-    { date: '11/08', description: 'Fandango', amount: 20.19 },
-    { date: '11/09', description: 'Vogue', amount: 16.50 },
-    { date: '11/09', description: 'Vogue', amount: 5.00 },
-  ]},
-  { category: 'Personal Care', section: 'discretionary', transactions: [
-    { date: '11/04', description: 'Maverick West', amount: 162.00 },
-    { date: '11/08', description: 'Joinzoe.com', amount: 9.99 },
-  ]},
-  { category: 'Subscriptions', section: 'discretionary', transactions: [
-    { date: '11/03', description: 'CNN Interactive', amount: 6.99 },
-    { date: '11/09', description: 'OpenAI ChatGPT Subscr', amount: 20.00 },
-  ]},
-  { category: 'Taxi & Transport', section: 'discretionary', transactions: [
-    { date: '11/03', description: 'Lyft', amount: 19.12 },
-    { date: '11/08', description: 'Lyft', amount: 14.56 },
-  ]},
-  { category: 'Health Care', section: 'fixed', transactions: [
-    { date: '11/03', description: 'Kaiser Permanente', amount: 99.00 },
+  { category: 'Gifts Given', section: 'discretionary', transactions: [
+    { date: '11/12', description: 'Fillmore Florist', amount: 258.42 },
   ]},
   { category: 'Groceries', section: 'fixed', transactions: [
-    { date: '11/03', description: 'Costco', amount: 206.16 },
-    { date: '11/08', description: 'Mollie Stone\'s', amount: 2.65 },
-    { date: '11/08', description: 'Mollie Stone\'s', amount: 5.30 },
+    { date: '11/10', description: 'Costco', amount: 180.11 },
+    { date: '11/12', description: 'Mollie Stone\'s', amount: 21.63 },
+    { date: '11/15', description: 'Mollie Stone\'s', amount: 2.65 },
+    { date: '11/15', description: 'Mollie Stone\'s', amount: 9.44 },
+    { date: '11/15', description: 'Mollie Stone\'s', amount: 11.64 },
+  ]},
+  { category: 'Health Care', section: 'fixed', transactions: [
+    { date: '11/10', description: 'Dermatology Medical Group', amount: 250.00 },
+  ]},
+  { category: 'Movies', section: 'discretionary', transactions: [
+    { date: '11/10', description: 'Alamo Drafthouse Cinema', amount: -9.00 },
+    { date: '11/10', description: 'SF76', amount: 14.00 },
+    { date: '11/10', description: 'Vogue', amount: 5.00 },
+    { date: '11/10', description: 'Vogue', amount: 11.00 },
+    { date: '11/11', description: 'Vogue', amount: 5.00 },
+    { date: '11/11', description: 'Vogue', amount: 7.00 },
+    { date: '11/12', description: 'Alamo Drafthouse Cinema', amount: 48.17 },
+    { date: '11/13', description: 'Presidio Theaters', amount: 13.00 },
+    { date: '11/15', description: 'Alamo Drafthouse Cinema', amount: 20.68 },
+    { date: '11/15', description: 'Kabuki', amount: 18.49 },
+  ]},
+  { category: 'Personal Care', section: 'discretionary', transactions: [
+    { date: '11/13', description: 'Joinzoe.com', amount: 50.00 },
+  ]},
+  { category: 'Subscriptions', section: 'discretionary', transactions: [
+    { date: '11/15', description: 'Audible.com', amount: 79.99 },
+  ]},
+  { category: 'Taxi & Transport', section: 'discretionary', transactions: [
+    { date: '11/10', description: 'Lyft', amount: 12.72 },
+    { date: '11/11', description: 'Lyft', amount: 14.58 },
+    { date: '11/11', description: 'Lyft', amount: 15.32 },
+    { date: '11/12', description: 'Lyft', amount: 21.35 },
+    { date: '11/13', description: 'Lyft', amount: 13.99 },
+    { date: '11/15', description: 'Lyft', amount: 20.61 },
+    { date: '11/15', description: 'Lyft', amount: 25.56 },
+    { date: '11/15', description: 'Lyft', amount: 27.52 },
   ]},
   // Monthly bills excluded: Mortgage, Condo Dues, Telephone, Home Insurance,
   // Property Tax, dental insurance (Blue Shield). These are fixed obligations
@@ -177,21 +175,25 @@ export const weeklyCategories: WeeklyCategory[] = [
 ]
 
 // Spending earlier in the same calendar month, BEFORE this week starts
-// (here: Sat Nov 1 – Sun Nov 2). Added to the week's total to show the
+// (here: Sat Nov 1 – Sun Nov 9). Added to the week's total to show the
 // cumulative % of each category's monthly budget already spent.
 // Same exclusions as the weekly view (Vacation, monthly bills, dental insurance).
 // Update each week: sum of all prior weeks in the month; reset to {} when a
 // new month starts on the week's Monday.
-// Source: Quicken CSV export 2026-11-11
+// Source: Quicken CSV export 2026-11-16
 export const MONTH_LABEL = 'November'
 export const monthPriorSpend: Record<string, number> = {
-  'Amazon': 139.37,
+  'Amazon': 258.67,
   'Cash': 410.00,
-  'Dining': 112.68,
-  'Movies': 144.60,
-  'Personal Care': 99.95,
-  'Taxi & Transport': 92.74,
-  'Groceries': 24.86,
+  'Clothing': 1481.11,
+  'Dining': 327.31,
+  'Groceries': 238.97,
+  'Health Care': 99.00,
+  'Household': 145.48,
+  'Movies': 253.97,
+  'Personal Care': 271.94,
+  'Subscriptions': 26.99,
+  'Taxi & Transport': 126.42,
 }
 
 export function monthToDate(wc: WeeklyCategory): number {

@@ -30,7 +30,7 @@ function App() {
         <div className="flex justify-between items-start">
           <BlurFade delay={0}>
             <div className="text-[13px] text-text-muted uppercase tracking-[0.06em] mb-2">
-              Week of {WEEK_LABEL} · YTD through Nov 9
+              Week of {WEEK_LABEL} · YTD through Nov 16
             </div>
           </BlurFade>
           <ThemeToggle />
@@ -161,7 +161,7 @@ function App() {
           ${Math.round(totalBudget / 12).toLocaleString()} · Weekly target:{' '}
           ${Math.round(totalBudget / 52).toLocaleString()}
           <br />
-          Categories from Quicken · Updated Nov 11, 2026
+          Categories from Quicken · Updated Nov 16, 2026
         </footer>
       </BlurFade>
     </div>
